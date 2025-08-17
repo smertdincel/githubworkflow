@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Edit Car</h2>
+<form method="POST">
+  {{ form.hidden_tag() }}
+  <div class="mb-3">
+    {{ form.name.label }} {{ form.name(class="form-control") }}
+  </div>
+  <div class="mb-3">
+    {{ form.year.label }} {{ form.year(class="form-control") }}
+  </div>
+  <div class="mb-3">
+    {{ form.mileage.label }} {{ form.mileage(class="form-control") }}
+  </div>
+  {{ form.submit(class="btn btn-success") }}
+</form>
+{% endblock %}

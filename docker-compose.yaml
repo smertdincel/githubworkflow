@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: caruser
+      POSTGRES_PASSWORD: StrongPass123
+      POSTGRES_DB: cardb
+    volumes:
+      - car-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U caruser -d cardb"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  web:
+    image: sadikmert/car-app:1.0
+    # Geliştirme sırasında local build kullanmak istersen:
+    # build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_USER: caruser
+      DB_PASSWORD: StrongPass123
+      DB_HOST: db          # ÖNEMLİ: Compose içi hostname servis adı
+      DB_PORT: "5432"
+      DB_NAME: cardb
+      SECRET_KEY: change-me
+    ports:
+      - "8081:8080"
+    restart: unless-stopped
+
+volumes:
+  car-db-data:

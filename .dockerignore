@@ -1,0 +1,61 @@
+# ===== Python cache / artefacts =====
+**/__pycache__/
+*.py[cod]
+*.pyd
+*.so
+*.egg-info/
+*.dist-info/
+.pytest_cache/
+.mypy_cache/
+.tox/
+.coverage
+coverage.xml
+htmlcov/
+build/
+dist/
+wheels/
+
+# ===== Virtual environments =====
+.venv/
+venv/
+env/
+
+# ===== VCS =====
+.git/
+.gitignore
+
+# ===== OS / Editor junk =====
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# ===== Logs & local DB files =====
+*.log
+*.sqlite*
+*.db
+
+# ===== Secrets (asla imaja gömme) =====
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.pfx
+*.der
+*.csr
+*.p12
+*.keystore
+
+# ===== Docker / Compose local override =====
+docker-compose.override.yml
+
+# ===== Bilerek dahil edeceğimiz (ignore ETME) =====
+!requirements.txt
+!Dockerfile
+!app.py
+!config.py
+!models.py
+!forms.py
+!templates/
+!static/
