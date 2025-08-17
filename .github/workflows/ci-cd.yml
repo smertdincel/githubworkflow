@@ -40,8 +40,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Write SSH key
+        shell: bash
         run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
+          umask 077
+          cat > key.pem <<'KEY'
+          ${{ secrets.EC2_SSH_KEY }}
+          KEY
           chmod 600 key.pem
 
       - name: Update image tag on EC2 and restart web
@@ -55,13 +59,19 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i key.pem "$USER@$HOST" bash -lc '
             set -e
             cd /opt/carapp
+
+            # 1) .env de çalışacak imaj tagini commit SHA yap
             if grep -q "^CARAPP_TAG=" .env; then
               sudo sed -i "s/^CARAPP_TAG=.*/CARAPP_TAG='"$SHA"'/" .env
             else
               echo "CARAPP_TAG='"$SHA"'" | sudo tee -a .env
             fi
+
+            # 2) Registry login + sadece web'i yenile
             echo "'"$DOCKER_TOKEN"'" | sudo docker login -u "'"$DOCKER_USER"'" --password-stdin
             sudo docker compose pull web
             sudo docker compose up -d --no-deps web
+
+            # 3) (opsiyonel) health kontrol
             curl -sf http://127.0.0.1:8080/api/health || echo "health endpoint yok/başarısız ama deploy tamam"
           '
